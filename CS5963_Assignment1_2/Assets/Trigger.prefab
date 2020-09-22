@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4278656311560297778}
   - component: {fileID: 4278656311560297781}
   - component: {fileID: 4278656311560297780}
+  - component: {fileID: 2477178864919968997}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -83,3 +84,15 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &2477178864919968997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4278656311560297783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd29e9b234f062a49b3f339f6c76e40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

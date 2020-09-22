@@ -19,10 +19,13 @@ public class PlayerController : MonoBehaviour
     }
     public CONTROLLER_TYPE DebugType = CONTROLLER_TYPE.PC;
 
-    interface PlayerControllerPlatform
+    public interface PlayerControllerPlatform
     {
         void HandleMovement(CharacterController characterController, Transform playerTransform);
         void HandleLookDir(Transform cameraTransform, Transform playerTransform);
+
+        bool HandleInteractiveButton();
+        bool HandleCancelButton();
     }
 
     /*
@@ -57,10 +60,30 @@ public class PlayerController : MonoBehaviour
 
             characterController.Move(Time.deltaTime * moveDirection);
         }
+
+        public bool HandleInteractiveButton()
+        {
+            return Input.GetKeyDown(KeyCode.F);
+        }
+
+        public bool HandleCancelButton()
+        {
+            return Input.GetKeyDown(KeyCode.Escape);
+        }
     }
 
     class PlayerControllerWMR : PlayerControllerPlatform
     {
+        public bool HandleCancelButton()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool HandleInteractiveButton()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void HandleLookDir(Transform cameraTransform, Transform playerTransform)
         {
             throw new System.NotImplementedException();
@@ -74,6 +97,16 @@ public class PlayerController : MonoBehaviour
 
     class PlayerControllerValve : PlayerControllerPlatform
     {
+        public bool HandleCancelButton()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool HandleInteractiveButton()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void HandleLookDir(Transform cameraTransform, Transform playerTransform)
         {
             throw new System.NotImplementedException();
@@ -85,7 +118,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    PlayerControllerPlatform playerControllerPlatform;
+    public PlayerControllerPlatform playerControllerPlatform;
 
     // Start is called before the first frame update
     void Start()
@@ -108,7 +141,7 @@ public class PlayerController : MonoBehaviour
             playerControllerPlatform = new PlayerControllerValve();
         }
 #endif
-
+        GameMode.playerController = this;
 
         characterController = GetComponent<CharacterController>();
 
@@ -134,5 +167,14 @@ public class PlayerController : MonoBehaviour
 
         // Vertical Movement
         characterController.Move(verticalVelocity * Time.deltaTime * Vector3.up);
+
+        if(playerControllerPlatform.HandleCancelButton())
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 }
