@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
         public bool HandleInteractiveButton()
         {
-            return Input.GetKeyDown(KeyCode.F);
+            return Input.GetKeyDown(KeyCode.E);
         }
 
         public bool HandleCancelButton()
