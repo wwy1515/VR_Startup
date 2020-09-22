@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private float gravityValue = -9.81f;
     private bool groundedPlayer;
     private float verticalVelocity = 0.0f;
-    private CharacterController characterController;
+    public CharacterController characterController;
 
     public Camera playerCamera;
     public enum CONTROLLER_TYPE
