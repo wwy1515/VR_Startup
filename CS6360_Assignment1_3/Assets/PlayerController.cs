@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     private bool groundedPlayer;
     private float verticalVelocity = 0.0f;
     public CharacterController characterController;
+    public VRMirror VRMirror;
+
 
     public Camera playerCamera;
     public enum CONTROLLER_TYPE
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     public interface PlayerControllerPlatform
     {
-        void HandleMovement(CharacterController characterController, Transform playerTransform);
+        Vector2 HandleMovement(CharacterController characterController, Transform playerTransform);
         void HandleLookDir(Transform cameraTransform, Transform playerTransform);
 
         bool HandleInteractiveButton();
@@ -47,7 +49,7 @@ public class PlayerController : MonoBehaviour
             playerTransform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
 
-        public void HandleMovement(CharacterController characterController, Transform playerTransform)
+        public Vector2 HandleMovement(CharacterController characterController, Transform playerTransform)
         {
             // We are grounded, so recalculate move direction based on axes
             Vector3 forward = playerTransform.TransformDirection(Vector3.forward);
@@ -59,6 +61,8 @@ public class PlayerController : MonoBehaviour
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
             characterController.Move(Time.deltaTime * moveDirection);
+
+            return new Vector2(curSpeedX, curSpeedY);
         }
 
         public bool HandleInteractiveButton()
@@ -89,7 +93,7 @@ public class PlayerController : MonoBehaviour
             throw new System.NotImplementedException();
         }
 
-        public void HandleMovement(CharacterController characterController, Transform playerTransform)
+        public Vector2 HandleMovement(CharacterController characterController, Transform playerTransform)
         {
             throw new System.NotImplementedException();
         }
@@ -112,7 +116,7 @@ public class PlayerController : MonoBehaviour
             throw new System.NotImplementedException();
         }
 
-        public void HandleMovement(CharacterController characterController, Transform playerTransform)
+        public Vector2 HandleMovement(CharacterController characterController, Transform playerTransform)
         {
             throw new System.NotImplementedException();
         }
@@ -160,7 +164,7 @@ public class PlayerController : MonoBehaviour
 
         // Vector3 movement = playerControllerPlatform.HandleMovement();
         playerControllerPlatform.HandleLookDir(playerCamera.transform, transform);
-        playerControllerPlatform.HandleMovement(characterController, transform);
+        VRMirror.Move(playerControllerPlatform.HandleMovement(characterController, transform));
 
         // Add gravity
         verticalVelocity += gravityValue * Time.deltaTime;
