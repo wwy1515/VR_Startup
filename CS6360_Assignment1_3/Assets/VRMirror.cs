@@ -47,16 +47,16 @@ public class VRMirror : MonoBehaviour
 
     public void Move(Vector2 movement)
     {
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
 
-        Guard.transform.rotation = transform.rotation;
+        Guard.transform.rotation = Camera.main.transform.rotation;
 
         if (guardState == GuardState.Mirroring)
         {
             forward = -forward;
             right = -right;
-            Guard.transform.rotation = transform.rotation * Quaternion.Euler(0.0f, 180.0f, 0.0f);
+            Guard.transform.rotation = Camera.main.transform.rotation * Quaternion.Euler(0.0f, 180.0f, 0.0f);
         }
 
         Vector3 move = movement.x * forward + movement.y * right;

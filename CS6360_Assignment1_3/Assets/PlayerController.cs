@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -101,24 +102,49 @@ public class PlayerController : MonoBehaviour
 
     class PlayerControllerValve : PlayerControllerPlatform
     {
+        float movementVelocity = 5.0f;
+        
         public bool HandleCancelButton()
         {
-            throw new System.NotImplementedException();
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+            
+            bool triggered;
+            inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
+
+            return triggered;
         }
 
         public bool HandleInteractiveButton()
         {
-            throw new System.NotImplementedException();
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            
+            bool triggered;
+            inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
+
+            return triggered;
         }
 
         public void HandleLookDir(Transform cameraTransform, Transform playerTransform)
         {
-            throw new System.NotImplementedException();
         }
 
         public Vector2 HandleMovement(CharacterController characterController, Transform playerTransform)
         {
-            throw new System.NotImplementedException();
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            Vector2 axisVal = Vector2.zero; 
+            inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
+
+            Vector3 forward =  Camera.main.transform.forward;
+            Vector3 right =  Camera.main.transform.right;
+
+            float curSpeedX = movementVelocity * axisVal.y;
+            float curSpeedY = 0.6f * movementVelocity * axisVal.x;
+
+            Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+            characterController.Move(Time.deltaTime * moveDirection);
+
+            return new Vector2(curSpeedX, curSpeedY);
         }
     }
 
