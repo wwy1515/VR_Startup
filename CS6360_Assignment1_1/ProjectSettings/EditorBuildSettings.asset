@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/CS6360_Assignment1_1.unity
+    guid: 9f7d8b5df67e9284f8ff45b456287b5e
   m_configObjects: {}
