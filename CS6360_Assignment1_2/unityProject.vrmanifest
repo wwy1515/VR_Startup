@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.cs5963_assignment1_2.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\79018\\Documents\\GitHub\\VR_Startup\\CS6360_Assignment1_2\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "CS5963_Assignment1_2 [Testing]"
+        }
+      }
+    }
+  ]
+}

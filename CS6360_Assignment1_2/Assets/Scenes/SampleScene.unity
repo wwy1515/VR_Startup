@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.35917154, g: 0.38780499, b: 0.41770625, a: 1}
+  m_IndirectSpecularColor: {r: 0.10438052, g: 0.12244855, b: 0.14327008, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1197,6 +1197,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1007347915675570640, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477138319830128165, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: m_TargetDisplay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6685349878868507483, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6776501744559612847, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331672322453169192, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: DebugType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8331672322453169199, guid: 2747a7232b2afe44fb8038885a639b13,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1261,6 +1286,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331672322453169203, guid: 2747a7232b2afe44fb8038885a639b13,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2747a7232b2afe44fb8038885a639b13, type: 3}

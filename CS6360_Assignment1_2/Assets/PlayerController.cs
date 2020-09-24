@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -97,24 +100,47 @@ public class PlayerController : MonoBehaviour
 
     class PlayerControllerValve : PlayerControllerPlatform
     {
+        // public SteamVR_Action_Vector2 actionMove = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("platformer", "Move");
+        float movementVelocity = 5.0f;
         public bool HandleCancelButton()
         {
-            throw new System.NotImplementedException();
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+            
+            bool triggered;
+            inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
+            
+            return triggered;
         }
 
         public bool HandleInteractiveButton()
         {
-            throw new System.NotImplementedException();
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            
+            bool triggered;
+            inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
+
+            return triggered;
         }
 
         public void HandleLookDir(Transform cameraTransform, Transform playerTransform)
         {
-            throw new System.NotImplementedException();
         }
 
         public void HandleMovement(CharacterController characterController, Transform playerTransform)
         {
-            throw new System.NotImplementedException();
+            // SteamVR_Input_Sources hand = SteamVR_Input_Sources.Any;
+            // Vector2 steer = actionMove.GetAxis(hand);
+            // Debug.Log(steer);
+
+            Vector3 forward =  Camera.main.transform.forward;
+            Vector3 right =  Camera.main.transform.right;
+
+            float curSpeedX = movementVelocity * Input.GetAxis("Vertical");
+            float curSpeedY = 0.6f * movementVelocity * Input.GetAxis("Horizontal");
+
+            Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+            characterController.Move(Time.deltaTime * moveDirection);
         }
     }
 
@@ -123,6 +149,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UnityEngine.XR.XRSettings.enabled = true;
+        Debug.Log(UnityEngine.XR.XRSettings.supportedDevices);
 #if WMR_HEADSET
         playerControllerPlatform = new PlayerControllerWMR();
 #elif VALVE_HEADSET
