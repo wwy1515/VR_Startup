@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -128,15 +126,15 @@ public class PlayerController : MonoBehaviour
 
         public void HandleMovement(CharacterController characterController, Transform playerTransform)
         {
-            // SteamVR_Input_Sources hand = SteamVR_Input_Sources.Any;
-            // Vector2 steer = actionMove.GetAxis(hand);
-            // Debug.Log(steer);
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            Vector2 axisVal = Vector2.zero; 
+            inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
 
             Vector3 forward =  Camera.main.transform.forward;
             Vector3 right =  Camera.main.transform.right;
 
-            float curSpeedX = movementVelocity * Input.GetAxis("Vertical");
-            float curSpeedY = 0.6f * movementVelocity * Input.GetAxis("Horizontal");
+            float curSpeedX = movementVelocity * axisVal.y;
+            float curSpeedY = 0.6f * movementVelocity * axisVal.x;
 
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 

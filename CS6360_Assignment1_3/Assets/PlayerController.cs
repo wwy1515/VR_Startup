@@ -134,6 +134,8 @@ public class PlayerController : MonoBehaviour
             Vector2 axisVal = Vector2.zero; 
             inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
 
+            Debug.Log(axisVal);
+
             Vector3 forward =  Camera.main.transform.forward;
             Vector3 right =  Camera.main.transform.right;
 
