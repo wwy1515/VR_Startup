@@ -13,12 +13,7 @@ public class PlayerController : MonoBehaviour
 
 
     public Camera playerCamera;
-    public enum CONTROLLER_TYPE
-    {
-        PC,
-        VR
-    }
-    public CONTROLLER_TYPE DebugType = CONTROLLER_TYPE.PC;
+
 
     public interface PlayerControllerPlatform
     {
@@ -138,11 +133,11 @@ public class PlayerController : MonoBehaviour
 #elif VALVE_HEADSET
         playerControllerPlatform = new PlayerControllerValve();
 #else
-        if (DebugType == CONTROLLER_TYPE.PC)
+        if (GameMode.GetInstance().enviromentType == GameMode.ENVIRONMENT_TYPE.PC)
         {
             playerControllerPlatform = new PlayerControllerPC();
         }
-        else if (DebugType == CONTROLLER_TYPE.VR)
+        else if (GameMode.GetInstance().enviromentType == GameMode.ENVIRONMENT_TYPE.VR)
         {
             playerControllerPlatform = new PlayerControllerVR();
         }
