@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     public Camera playerCamera;
 
+    public bool hasBall;
 
     public interface PlayerControllerPlatform
     {

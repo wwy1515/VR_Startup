@@ -8,7 +8,15 @@ public class GameMode : MonoBehaviour
 
     public TMPro.TextMeshProUGUI m_ScoreText;
 
+    public PlayerController playerController;
+    public Transform LeftHand;
+    public Transform RightHand;
+
+    public GameObject ballPrefab;
+    public GameObject handledBall;
+
     ScoreInterface scoreLogic;
+    PickInterface pickLogic;
 
     public enum ENVIRONMENT_TYPE
     {
@@ -33,6 +41,9 @@ public class GameMode : MonoBehaviour
     {
         scoreLogic = new ScoreBasic();
         scoreLogic.Init();
+
+        pickLogic = new PickBasic();
+        pickLogic.Init();
     }
 
     // Update is called once per frame
@@ -40,5 +51,7 @@ public class GameMode : MonoBehaviour
     {
         scoreLogic.Update();
         m_ScoreText.text = scoreLogic.GetScore().ToString();
+
+        pickLogic.Update();
     }
 }
