@@ -12,6 +12,7 @@ public class GameMode : MonoBehaviour
     public Transform LeftHand;
     public Transform RightHand;
 
+    public Vector3 hoopLocation;
     public GameObject ballPrefab;
     public GameObject handledBall;
 
@@ -40,7 +41,7 @@ public class GameMode : MonoBehaviour
     void Start()
     {
         scoreLogic = new ScoreBasic();
-        scoreLogic.Init();
+        scoreLogic.Init(hoopLocation);
 
         pickLogic = new PickBasic();
         pickLogic.Init();
@@ -49,7 +50,7 @@ public class GameMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreLogic.Update();
+        scoreLogic.Update(GameObject.Find(ballPrefab.name).transform.position);
         m_ScoreText.text = scoreLogic.GetScore().ToString();
 
         pickLogic.Update();
