@@ -50,7 +50,7 @@ public class GameMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreLogic.Update(GameObject.Find(ballPrefab.name).transform.position);
+        scoreLogic.Update(GameObject.Find(ballPrefab.name));
         m_ScoreText.text = scoreLogic.GetScore().ToString();
 
         pickLogic.Update();

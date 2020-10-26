@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ScoreInterface
 {
     void Init(Vector3 hoop_location);
-    void Update(Vector3 ball_location);
+    void Update(GameObject ball);
     int GetScore();
 }

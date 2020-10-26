@@ -20,14 +20,14 @@ public class ScoreBasic : ScoreInterface
         return m_score;
     }
 
-    public void Update(Vector3 ball_location)
+    public void Update(GameObject ball)
     {
         if(Input.GetKeyDown(KeyCode.U))
         {
             m_score = m_score + 1;
         }
 
-        if ((ball_location - hoop_location).magnitude < 0.3f)
+        if ((ball.transform.position - hoop_location).magnitude < 0.3f && ball.transform.position.y < hoop_location.y)
         {
             if (new_shot)
             {
