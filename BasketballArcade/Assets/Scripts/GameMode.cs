@@ -24,7 +24,7 @@ public class GameMode : MonoBehaviour
         VR
     }
 
-    public ENVIRONMENT_TYPE enviromentType = ENVIRONMENT_TYPE.PC;
+    public ENVIRONMENT_TYPE enviromentType = ENVIRONMENT_TYPE.VR;
 
     public static GameMode GetInstance()
     {

@@ -28,9 +28,6 @@ public class BallPickAction : MonoBehaviour
             // transfer the ball position to trackedObj position
             // pass the ball GameObject to TestThrow script
             PickThrowBasic pickThrowBasicScript = GameObject.Find("Controller (right)").GetComponent<PickThrowBasic>();
-            //Debug.Log(GameObject.Find("Controller (right)"));
-            //Debug.Log("gameObject name: " + gameObject.name);
-            //Debug.Log("testThrowScript: " + pickThrowBasicScript);
             pickThrowBasicScript.setPickedObj(gameObject);
 
         }

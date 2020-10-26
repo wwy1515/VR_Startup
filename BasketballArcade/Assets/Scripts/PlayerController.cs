@@ -146,8 +146,8 @@ public class PlayerController : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -168,13 +168,13 @@ public class PlayerController : MonoBehaviour
         // Vertical Movement
         characterController.Move(verticalVelocity * Time.deltaTime * Vector3.up);
 
-        if(playerControllerPlatform.HandleCancelButton())
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
-        }
+        //        if(playerControllerPlatform.HandleCancelButton())
+        //        {
+        //#if UNITY_EDITOR
+        //            UnityEditor.EditorApplication.isPlaying = false;
+        //#else
+        //            Application.Quit();
+        //#endif
+        //        }
     }
 }
