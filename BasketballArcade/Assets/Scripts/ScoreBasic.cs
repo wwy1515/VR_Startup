@@ -29,6 +29,7 @@ public class ScoreBasic : ScoreInterface
 
         if ((ball.transform.position - hoop_location).magnitude < 0.3f && ball.transform.position.y < hoop_location.y)
         {
+            Debug.Log("vaild new shot");
             if (new_shot)
             {
                 m_score += 1;

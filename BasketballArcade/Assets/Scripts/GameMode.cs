@@ -12,7 +12,7 @@ public class GameMode : MonoBehaviour
     public Transform LeftHand;
     public Transform RightHand;
 
-    public Vector3 hoopLocation;
+    public Transform hoop;
     public GameObject ballPrefab;
     public GameObject handledBall;
 
@@ -25,7 +25,7 @@ public class GameMode : MonoBehaviour
         VR
     }
 
-    public ENVIRONMENT_TYPE enviromentType = ENVIRONMENT_TYPE.PC;
+    public ENVIRONMENT_TYPE enviromentType = ENVIRONMENT_TYPE.VR;
 
     public static GameMode GetInstance()
     {
@@ -41,7 +41,7 @@ public class GameMode : MonoBehaviour
     void Start()
     {
         scoreLogic = new ScoreBasic();
-        scoreLogic.Init(hoopLocation);
+        scoreLogic.Init(hoop.position);
 
         pickLogic = new PickBasic();
         pickLogic.Init();
@@ -50,7 +50,10 @@ public class GameMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreLogic.Update(GameObject.Find(ballPrefab.name));
+        if (handledBall)
+        {
+            scoreLogic.Update(handledBall);
+        }
         m_ScoreText.text = scoreLogic.GetScore().ToString();
 
         pickLogic.Update();

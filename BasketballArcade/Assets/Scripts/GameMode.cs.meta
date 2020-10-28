@@ -3,7 +3,14 @@ guid: 65720aff1b0e9c74a8a937f1de164b50
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_ScoreText: {instanceID: 0}
+  - playerController: {instanceID: 0}
+  - LeftHand: {instanceID: 0}
+  - RightHand: {instanceID: 0}
+  - ballPrefab: {fileID: 7894650203487900072, guid: 1710f14a6021cae4f9e851f346f2552c,
+      type: 3}
+  - handledBall: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

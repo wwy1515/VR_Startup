@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
         bool HandleInteractiveButton();
         bool HandleCancelButton();
+        void HandleHandTransform(Transform lefthand, Transform righthand, Transform playerTransform);
     }
 
     /*
@@ -55,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
-            Debug.Log(moveDirection.ToString());
+            //Debug.Log(moveDirection.ToString());
 
             characterController.Move(Time.deltaTime * moveDirection);
 
@@ -71,16 +73,18 @@ public class PlayerController : MonoBehaviour
         {
             return Input.GetKeyDown(KeyCode.Escape);
         }
+        
+        public void HandleHandTransform(Transform lefthand, Transform righthand, Transform playerTransform) { }
     }
 
 
     class PlayerControllerVR : PlayerControllerPlatform
     {
         float movementVelocity = 5.0f;
-        
+
         public bool HandleCancelButton()
         {
-            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
             
             bool triggered;
             inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
@@ -90,11 +94,12 @@ public class PlayerController : MonoBehaviour
 
         public bool HandleInteractiveButton()
         {
-            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
             
+            // use trigger button for throw and pick logic
             bool triggered;
             inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out triggered);
-
+            
             return triggered;
         }
 
@@ -104,11 +109,12 @@ public class PlayerController : MonoBehaviour
 
         public Vector2 HandleMovement(CharacterController characterController, Transform playerTransform)
         {
+            // use 
             InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
             Vector2 axisVal = Vector2.zero; 
             inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
 
-            Debug.Log(axisVal);
+            //Debug.Log(axisVal);
 
             Vector3 forward =  Camera.main.transform.forward;
             Vector3 right =  Camera.main.transform.right;
@@ -119,8 +125,30 @@ public class PlayerController : MonoBehaviour
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
             characterController.Move(Time.deltaTime * moveDirection);
+            //playerTransform.position = characterController.transform.position;
 
             return new Vector2(curSpeedX, curSpeedY);
+        }
+
+        public void HandleHandTransform(Transform lefthand, Transform righthand, Transform playerTransform)
+        {
+            InputDevice deviceLeftHand = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
+            InputDevice deviceRightHand = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+
+            Vector3 deviceLeftHandPos, deviceRightHandPos;
+            Quaternion deviceLeftHandRot, deviceRightHandRot;
+
+            deviceLeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out deviceLeftHandPos);
+            deviceLeftHand.TryGetFeatureValue(CommonUsages.deviceRotation, out deviceLeftHandRot);
+            deviceRightHand.TryGetFeatureValue(CommonUsages.devicePosition, out deviceRightHandPos);
+            deviceRightHand.TryGetFeatureValue(CommonUsages.deviceRotation, out deviceRightHandRot);
+
+            lefthand.position = new Vector3(playerTransform.position.x + deviceLeftHandPos.x,
+                deviceLeftHandPos.y, playerTransform.position.z + deviceLeftHandPos.z);
+            lefthand.rotation = deviceLeftHandRot;
+            righthand.position = new Vector3(playerTransform.position.x + deviceRightHandPos.x,
+                deviceRightHandPos.y, playerTransform.position.z + deviceRightHandPos.z);
+            righthand.rotation = deviceRightHandRot;
         }
     }
 
@@ -146,13 +174,16 @@ public class PlayerController : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // set the hand gameobject pos. to controller's pos.
+        playerControllerPlatform.HandleHandTransform(GameMode.GetInstance().LeftHand, GameMode.GetInstance().RightHand, this.transform);
+
         groundedPlayer = characterController.isGrounded;
         if (groundedPlayer && verticalVelocity < 0)
         {

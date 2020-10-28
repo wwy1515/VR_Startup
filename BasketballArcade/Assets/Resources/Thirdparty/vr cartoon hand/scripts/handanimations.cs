@@ -36,6 +36,11 @@ public class handanimations : MonoBehaviour
 	int HoldOculusController = Animator.StringToHash("HoldOculusController");
 	int PressTriggerOculusController = Animator.StringToHash("PressTriggerOculusController");
 
+	public void setAnim(int a)
+    {
+		anim.SetTrigger(a);
+    }
+
     void Start ()
     {
         anim = GetComponent<Animator>();
