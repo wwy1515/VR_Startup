@@ -24,6 +24,8 @@ public class GameMode : MonoBehaviour
 
     public Transform targetPos;
 
+    public List<Ball> balls;
+
     public enum ENVIRONMENT_TYPE
     {
         PC,

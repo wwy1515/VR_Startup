@@ -7,6 +7,7 @@ public class PickBasic : MonoBehaviour, PickInterface
 {
     // point the ball is attach to
     public Rigidbody attachPoint;
+    public Transform attachPos;
     public handanimations handanimationsScript;
     private GameObject collidingObject;
     FixedJoint joint;
@@ -41,27 +42,61 @@ public class PickBasic : MonoBehaviour, PickInterface
         inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
 
         historyVel.Enqueue(deviceVelocity);
-        if(historyVel.Count > 15)
+        if(historyVel.Count > 8)
         {
             historyVel.Dequeue();
         }
 
+        if(joint == null && !GameMode.GetInstance().playerController.hasBall && GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton() && (collidingObject == null))
+        {
+            bool noTheForce = true;
+            foreach(var ball in GameMode.GetInstance().balls)
+            {
+                if(ball.state == Ball.State.TheForce)
+                {
+                    noTheForce = false;
+                    break;
+                }
+            }
+
+            if(noTheForce)
+            {
+                Ball nearestBall = null;
+                float nearestDistance = 9999.9f;
+
+                foreach(var ball in GameMode.GetInstance().balls)
+                {
+                    float dist = (ball.transform.position - this.transform.position).sqrMagnitude;
+                    if(dist < nearestDistance)
+                    {
+                        nearestDistance = dist;
+                        nearestBall = ball;
+                    }
+                }
+
+                if(nearestBall.state == Ball.State.Outside)
+                {
+                    nearestBall.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    nearestBall.state = Ball.State.TheForce;
+                }
+            }
+        }
         // when press the trigger button
-        if (joint == null && !GameMode.GetInstance().playerController.hasBall && 
-            GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton())
+        else if (joint == null && !GameMode.GetInstance().playerController.hasBall && 
+            GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton() && collidingObject)
         {
             handanimationsScript.setAnim(Animator.StringToHash("GrabLarge"));
 
             GameMode.GetInstance().playerController.hasBall = true;
-            GameMode.GetInstance().handledBall = GameObject.Instantiate(GameMode.GetInstance().ballPrefab);
-            // GameMode.GetInstance().handledBall = collidingObject;
-            GameMode.GetInstance().handledBall.transform.position = attachPoint.transform.position;
+            // GameMode.GetInstance().handledBall = GameObject.Instantiate(GameMode.GetInstance().ballPrefab);
+            GameMode.GetInstance().handledBall = collidingObject;
+            GameMode.GetInstance().handledBall.transform.position = attachPos.transform.position;
             collidingObject = null;
 
             joint = GameMode.GetInstance().handledBall.AddComponent<FixedJoint>();
             joint.breakForce = 5000;
             joint.breakTorque = 5000;
-            joint.connectedBody = attachPoint;
+            joint.connectedBody = attachPos.GetComponent<Rigidbody>();
         }
         // when releasing the trigger button
         else if (joint != null && GameMode.GetInstance().playerController.hasBall && 
@@ -74,12 +109,7 @@ public class PickBasic : MonoBehaviour, PickInterface
 
             Object.DestroyImmediate(joint);
             joint = null;
-            Object.Destroy(go, 15.0f);
-
-            // InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
-            // Vector3 deviceVelocity, deviceAngularVelocity;
-            // inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
-            // inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
+            // Object.Destroy(go, 15.0f);
 
             var velArr = historyVel.ToArray();
             Vector3 totalVel = Vector3.zero;
@@ -89,13 +119,12 @@ public class PickBasic : MonoBehaviour, PickInterface
                 totalVel += item;
             }
 
-            Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPoint.transform.position).normalized;
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPos.transform.position).normalized;
             Vector3 trickDir = (totalVel).normalized;
-            float powerScaler = Mathf.Clamp(1.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 2.0f, 8.0f);
+            trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
+            trickDir.Normalize();
+            float powerScaler = Mathf.Clamp(2.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 3.7f, 6.7f);
             ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
-            // ball.velocity = ;
-            // ball.angularVelocity = deviceAngularVelocity;
-            // ball.maxAngularVelocity = ball.angularVelocity.magnitude;
 
             GameMode.GetInstance().playerController.hasBall = false;
             GameMode.GetInstance().handledBall = null;
@@ -132,12 +161,6 @@ public class PickBasic : MonoBehaviour, PickInterface
 
     public void Init()
     {
-        //if (GameMode.GetInstance().enviromentType == GameMode.ENVIRONMENT_TYPE.VR)
-        //{
-        //    // set the attachpoint to righthand
-        //    GameObject righthand = GameObject.Find("vr_cartoon_hand_prefab_right").transform.GetChild(0).gameObject;
-        //    attachPoint = righthand.GetComponent<Rigidbody>();
-        //}
     }
 
     public void Update()
