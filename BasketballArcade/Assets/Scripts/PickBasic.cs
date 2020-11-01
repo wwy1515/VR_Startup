@@ -10,6 +10,7 @@ public class PickBasic : MonoBehaviour, PickInterface
     public handanimations handanimationsScript;
     private GameObject collidingObject;
     FixedJoint joint;
+    Queue<Vector3> historyVel = new Queue<Vector3>();
 
     public void PickThrowPC()
     {
@@ -34,15 +35,26 @@ public class PickBasic : MonoBehaviour, PickInterface
 
     public void PickThrowVR()
     {
+        InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+        Vector3 deviceVelocity, deviceAngularVelocity;
+        inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
+        inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
+
+        historyVel.Enqueue(deviceVelocity);
+        if(historyVel.Count > 15)
+        {
+            historyVel.Dequeue();
+        }
+
         // when press the trigger button
         if (joint == null && !GameMode.GetInstance().playerController.hasBall && 
-            GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton() && collidingObject)
+            GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton())
         {
             handanimationsScript.setAnim(Animator.StringToHash("GrabLarge"));
 
             GameMode.GetInstance().playerController.hasBall = true;
-            //GameMode.GetInstance().handledBall = GameObject.Instantiate(GameMode.GetInstance().ballPrefab);
-            GameMode.GetInstance().handledBall = collidingObject;
+            GameMode.GetInstance().handledBall = GameObject.Instantiate(GameMode.GetInstance().ballPrefab);
+            // GameMode.GetInstance().handledBall = collidingObject;
             GameMode.GetInstance().handledBall.transform.position = attachPoint.transform.position;
             collidingObject = null;
 
@@ -64,14 +76,26 @@ public class PickBasic : MonoBehaviour, PickInterface
             joint = null;
             Object.Destroy(go, 15.0f);
 
-            InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
-            Vector3 deviceVelocity, deviceAngularVelocity;
-            inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
-            inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
+            // InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
+            // Vector3 deviceVelocity, deviceAngularVelocity;
+            // inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
+            // inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
 
-            ball.velocity = deviceVelocity;
-            ball.angularVelocity = deviceAngularVelocity;
-            ball.maxAngularVelocity = ball.angularVelocity.magnitude;
+            var velArr = historyVel.ToArray();
+            Vector3 totalVel = Vector3.zero;
+            for(int i = 0; i < velArr.Length; i++)
+            {
+                var item = velArr[i];
+                totalVel += item;
+            }
+
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPoint.transform.position).normalized;
+            Vector3 trickDir = (totalVel).normalized;
+            float powerScaler = Mathf.Clamp(1.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 2.0f, 8.0f);
+            ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
+            // ball.velocity = ;
+            // ball.angularVelocity = deviceAngularVelocity;
+            // ball.maxAngularVelocity = ball.angularVelocity.magnitude;
 
             GameMode.GetInstance().playerController.hasBall = false;
             GameMode.GetInstance().handledBall = null;
@@ -87,17 +111,17 @@ public class PickBasic : MonoBehaviour, PickInterface
         collidingObject = col.gameObject;
     }
 
-    public void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         SetCollidingObject(other);
     }
 
-    public void OnTriggerStay(Collider other)
+    void OnTriggerStay(Collider other)
     {
         SetCollidingObject(other);
     }
 
-    public void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (!collidingObject)
         {
@@ -129,6 +153,4 @@ public class PickBasic : MonoBehaviour, PickInterface
             PickThrowVR();
         }
     }
-
-    
 }

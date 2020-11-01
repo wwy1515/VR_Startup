@@ -26,19 +26,10 @@ public class ScoreBasic : ScoreInterface
         {
             m_score = m_score + 1;
         }
+    }
 
-        if ((ball.transform.position - hoop_location).magnitude < 0.3f && ball.transform.position.y < hoop_location.y)
-        {
-            Debug.Log("vaild new shot");
-            if (new_shot)
-            {
-                m_score += 1;
-                new_shot = false;
-            }
-        }
-        else
-        {
-            new_shot = true;
-        }
+    public void AddScore(int val)
+    {
+        m_score += val;
     }
 }

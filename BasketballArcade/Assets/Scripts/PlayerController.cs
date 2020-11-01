@@ -114,8 +114,6 @@ public class PlayerController : MonoBehaviour
             Vector2 axisVal = Vector2.zero; 
             inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
 
-            //Debug.Log(axisVal);
-
             Vector3 forward =  Camera.main.transform.forward;
             Vector3 right =  Camera.main.transform.right;
 
@@ -123,8 +121,11 @@ public class PlayerController : MonoBehaviour
             float curSpeedY = 0.6f * movementVelocity * axisVal.x;
 
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-
-            characterController.Move(Time.deltaTime * moveDirection);
+            Debug.Log(moveDirection);
+            if(moveDirection.magnitude > 0.5f)
+            {
+                characterController.Move(Time.deltaTime * moveDirection);
+            }
             //playerTransform.position = characterController.transform.position;
 
             return new Vector2(curSpeedX, curSpeedY);
@@ -143,11 +144,10 @@ public class PlayerController : MonoBehaviour
             deviceRightHand.TryGetFeatureValue(CommonUsages.devicePosition, out deviceRightHandPos);
             deviceRightHand.TryGetFeatureValue(CommonUsages.deviceRotation, out deviceRightHandRot);
 
-            lefthand.position = new Vector3(playerTransform.position.x + deviceLeftHandPos.x,
-                deviceLeftHandPos.y, playerTransform.position.z + deviceLeftHandPos.z);
+            lefthand.localPosition = deviceLeftHandPos;
             lefthand.rotation = deviceLeftHandRot;
-            righthand.position = new Vector3(playerTransform.position.x + deviceRightHandPos.x,
-                deviceRightHandPos.y, playerTransform.position.z + deviceRightHandPos.z);
+
+            righthand.localPosition = deviceRightHandPos;
             righthand.rotation = deviceRightHandRot;
         }
     }
@@ -201,11 +201,11 @@ public class PlayerController : MonoBehaviour
 
         if(playerControllerPlatform.HandleCancelButton())
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+// #if UNITY_EDITOR
+//             UnityEditor.EditorApplication.isPlaying = false;
+// #else
+//             Application.Quit();
+// #endif
         }
     }
 }

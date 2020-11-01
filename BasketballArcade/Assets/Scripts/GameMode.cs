@@ -16,8 +16,13 @@ public class GameMode : MonoBehaviour
     public GameObject ballPrefab;
     public GameObject handledBall;
 
-    ScoreInterface scoreLogic;
+    public ScoreInterface scoreLogic;
     PickInterface pickLogic;
+
+    public PickBasic leftPick;
+    public PickBasic rightPick;
+
+    public Transform targetPos;
 
     public enum ENVIRONMENT_TYPE
     {
@@ -43,8 +48,8 @@ public class GameMode : MonoBehaviour
         scoreLogic = new ScoreBasic();
         scoreLogic.Init(hoop.position);
 
-        pickLogic = new PickBasic();
-        pickLogic.Init();
+        // pickLogic = new PickBasic();
+        // pickLogic.Init();
     }
 
     // Update is called once per frame
@@ -56,6 +61,8 @@ public class GameMode : MonoBehaviour
         }
         m_ScoreText.text = scoreLogic.GetScore().ToString();
 
-        pickLogic.Update();
+        // leftPick.Update();
+        rightPick.Update();
+        // pickLogic.Update();
     }
 }
