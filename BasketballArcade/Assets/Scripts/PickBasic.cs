@@ -84,6 +84,7 @@ public class PickBasic : MonoBehaviour, PickInterface
                 }
             }
         }
+        
         // when press the trigger button
         else if (joint == null && !GameMode.GetInstance().playerController.hasBall && 
             GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton() && collidingObject)
@@ -130,7 +131,8 @@ public class PickBasic : MonoBehaviour, PickInterface
             trickDir.Normalize();
             float powerScaler = Mathf.Clamp(2.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 3.7f, 6.7f);
             ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
-
+            ball.GetComponent<Ball>().state = Ball.State.Outside;
+            ball.useGravity = true;
             GameMode.GetInstance().playerController.hasBall = false;
             GameMode.GetInstance().handledBall = null;
 
