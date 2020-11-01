@@ -41,10 +41,13 @@ public class PickBasic : MonoBehaviour, PickInterface
         inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
         inputDevice.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceAngularVelocity);
 
-        historyVel.Enqueue(deviceVelocity);
-        if(historyVel.Count > 8)
+        if(GameMode.GetInstance().playerController.hasBall)
         {
-            historyVel.Dequeue();
+            historyVel.Enqueue(deviceVelocity);
+            if(historyVel.Count > 8)
+            {
+                historyVel.Dequeue();
+            }
         }
 
         if(joint == null && !GameMode.GetInstance().playerController.hasBall && GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton() && (collidingObject == null))
@@ -123,11 +126,15 @@ public class PickBasic : MonoBehaviour, PickInterface
             Vector3 trickDir = (totalVel).normalized;
             trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
             trickDir.Normalize();
+            trickDir = trickDir + Vector3.up * 0.25f;
+            trickDir.Normalize();
             float powerScaler = Mathf.Clamp(2.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 3.7f, 6.7f);
             ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
 
             GameMode.GetInstance().playerController.hasBall = false;
             GameMode.GetInstance().handledBall = null;
+
+            historyVel.Clear();
         }
     }
 
