@@ -65,11 +65,15 @@ public class Ball : MonoBehaviour
         if(other.gameObject.GetComponents<ScoreObserver>() != null)
         {
             if(state == State.Inside)
-            {
-                state = State.Scored;
+            {    
                 if(transform.position.y < GameMode.GetInstance().targetPos.position.y)
                 {
+                    state = State.Scored;
                     GameMode.GetInstance().scoreLogic.AddScore(1);
+                }
+                else
+                {
+                    state = State.Outside;
                 }
             }
         }
