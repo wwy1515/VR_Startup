@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour
     {
         Inside,
         Outside,
+        Scored,
         TheForce,
     }
 
@@ -52,7 +53,7 @@ public class Ball : MonoBehaviour
     {
         if(other.gameObject.GetComponents<ScoreObserver>() != null)
         {
-            if(transform.position.y > GameMode.GetInstance().targetPos.position.y)
+            if(state != State.Scored && transform.position.y > GameMode.GetInstance().targetPos.position.y)
             {
                 state = State.Inside;
             }
@@ -65,7 +66,7 @@ public class Ball : MonoBehaviour
         {
             if(state == State.Inside)
             {
-                state = State.Outside;
+                state = State.Scored;
                 if(transform.position.y < GameMode.GetInstance().targetPos.position.y)
                 {
                     GameMode.GetInstance().scoreLogic.AddScore(1);
