@@ -68,7 +68,7 @@ public class Ball : MonoBehaviour
             {    
                 if(transform.position.y < GameMode.GetInstance().targetPos.position.y)
                 {
-                    state = State.Scored;
+                    state = State.Outside;
                     GameMode.GetInstance().scoreLogic.AddScore(1);
                 }
                 else
