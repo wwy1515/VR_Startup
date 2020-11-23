@@ -36,6 +36,8 @@ public class PickBasic : MonoBehaviour, PickInterface
 
     public void PickThrowVR()
     {
+        Debug.DrawRay(GameMode.GetInstance().RightHand.transform.position, -GameMode.GetInstance().RightHand.transform.up * 10.0f, Color.yellow);
+
         InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
         Vector3 deviceVelocity, deviceAngularVelocity;
         inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
@@ -123,14 +125,22 @@ public class PickBasic : MonoBehaviour, PickInterface
                 totalVel += item;
             }
 
+            var rightHandPos = GameMode.GetInstance().RightHand.position;
+            // raycaLayerMask.NameToLayer
+
             Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPos.transform.position).normalized;
             Vector3 trickDir = (totalVel).normalized;
-            trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
-            trickDir.Normalize();
-            trickDir = trickDir + Vector3.up * 0.25f;
-            trickDir.Normalize();
-            float powerScaler = Mathf.Clamp(2.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 3.7f, 6.7f);
-            ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
+            // trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
+            // trickDir.Normalize();
+            // trickDir = trickDir + Vector3.up * 0.25f;
+            // trickDir.Normalize();
+
+            float powerScaler = 2.0f * (totalVel / (float)velArr.Length).sqrMagnitude;
+                        
+
+            // ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
+        
+            ball.AddForceAtPosition(powerScaler * trickDir, ball.transform.position - 0.5f * trickDir,ForceMode.VelocityChange);
             ball.GetComponent<Ball>().state = Ball.State.Outside;
             ball.useGravity = true;
             GameMode.GetInstance().playerController.hasBall = false;
