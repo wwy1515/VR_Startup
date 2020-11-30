@@ -45,10 +45,45 @@ public class PickBasic : MonoBehaviour, PickInterface
 
         if(GameMode.GetInstance().playerController.hasBall)
         {
+            GameMode.GetInstance().arrow.gameObject.SetActive(true);
+
             historyVel.Enqueue(deviceVelocity);
-            if(historyVel.Count > 8)
+            if(historyVel.Count > 3)
             {
                 historyVel.Dequeue();
+            }
+        }
+        else
+        {
+            GameMode.GetInstance().arrow.gameObject.SetActive(false);
+        }
+
+        // Set Arrow Properties
+        {
+            var velArr = historyVel.ToArray();
+            Vector3 totalVel = Vector3.zero;
+            for(int i = 0; i < velArr.Length; i++)
+            {
+                var item = velArr[i];
+                totalVel += item;
+            }
+
+            var rightHandPos = GameMode.GetInstance().RightHand.position;
+            // raycaLayerMask.NameToLayer
+
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPos.transform.position).normalized;
+            Vector3 trickDir = (totalVel).normalized;
+
+            GameMode.GetInstance().arrow.direction = trickDir;
+
+            float powerScaler = 2.0f * (totalVel / (float)velArr.Length).sqrMagnitude;
+            if(float.IsNaN(powerScaler))
+            {
+                GameMode.GetInstance().arrow.value = 0.0f;
+            }
+            else
+            {
+                GameMode.GetInstance().arrow.value = powerScaler;
             }
         }
 
