@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
             float curSpeedY = 0.6f * movementVelocity * axisVal.x;
 
             Vector3 moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-            Debug.Log(moveDirection);
+            //Debug.Log(moveDirection);
             if(moveDirection.magnitude > 0.5f)
             {
                 characterController.Move(Time.deltaTime * moveDirection);
