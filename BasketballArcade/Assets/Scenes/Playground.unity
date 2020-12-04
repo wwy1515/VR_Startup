@@ -1631,6 +1631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockText: {fileID: 1562355118}
+  m_ScoreText: {fileID: 706916623}
 --- !u!1001 &956893768
 PrefabInstance:
   m_ObjectHideFlags: 0
