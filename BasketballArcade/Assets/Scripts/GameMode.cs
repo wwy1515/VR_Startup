@@ -26,6 +26,8 @@ public class GameMode : MonoBehaviour
 
     public List<Ball> balls;
 
+    public Arrow arrow;
+
     public enum ENVIRONMENT_TYPE
     {
         PC,

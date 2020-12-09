@@ -11,7 +11,18 @@ public class PickBasic : MonoBehaviour, PickInterface
     public handanimations handanimationsScript;
     private GameObject collidingObject;
     FixedJoint joint;
-    Queue<Vector3> historyVel = new Queue<Vector3>();
+    struct Velocity
+    {
+        public Vector3 linearVel;
+        public Vector3 angularVel;
+
+        public Velocity(Vector3 linearVel, Vector3 angularVel)
+        {
+            this.linearVel = linearVel;
+            this.angularVel = angularVel;
+        }
+    }
+    Queue<Velocity> historyVel = new Queue<Velocity>();
 
     public void PickThrowPC()
     {
@@ -36,6 +47,8 @@ public class PickBasic : MonoBehaviour, PickInterface
 
     public void PickThrowVR()
     {
+        Debug.DrawRay(GameMode.GetInstance().RightHand.transform.position, -GameMode.GetInstance().RightHand.transform.up * 10.0f, Color.yellow);
+
         InputDevice inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
         Vector3 deviceVelocity, deviceAngularVelocity;
         inputDevice.TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceVelocity);
@@ -43,10 +56,46 @@ public class PickBasic : MonoBehaviour, PickInterface
 
         if(GameMode.GetInstance().playerController.hasBall)
         {
-            historyVel.Enqueue(deviceVelocity);
-            if(historyVel.Count > 8)
+            GameMode.GetInstance().arrow.gameObject.SetActive(true);
+
+            historyVel.Enqueue(new Velocity(deviceVelocity, deviceAngularVelocity));
+            if(historyVel.Count > 5)
             {
                 historyVel.Dequeue();
+            }
+        }
+        else
+        {
+            GameMode.GetInstance().arrow.gameObject.SetActive(false);
+        }
+
+        // Set Arrow Properties
+        {
+            var velArr = historyVel.ToArray();
+            Vector3 totalLinearVel = Vector3.zero;
+            for (int i = 0; i < velArr.Length; i++)
+            {
+                var item = velArr[i];
+                totalLinearVel += item.linearVel;
+            }
+
+            var rightHandPos = GameMode.GetInstance().RightHand.position;
+            // raycaLayerMask.NameToLayer
+
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPos.transform.position).normalized;
+            Vector3 trickDir = (totalLinearVel).normalized;
+
+            GameMode.GetInstance().arrow.direction = trickDir;
+
+            float powerScaler = 2.0f * (totalLinearVel / velArr.Length).magnitude;
+
+            if (float.IsNaN(powerScaler))
+            {
+                GameMode.GetInstance().arrow.value = 0.0f;
+            }
+            else
+            {
+                GameMode.GetInstance().arrow.value = powerScaler;
             }
         }
 
@@ -64,6 +113,11 @@ public class PickBasic : MonoBehaviour, PickInterface
 
             if(noTheForce)
             {
+                if(FadeLoop.PickTips.gameObject.activeSelf)
+                {
+                    FadeLoop.PickTips.gameObject.SetActive(false);
+                    FadeLoop.StartShootTips();
+                }
                 Ball nearestBall = null;
                 float nearestDistance = 9999.9f;
 
@@ -106,6 +160,11 @@ public class PickBasic : MonoBehaviour, PickInterface
         else if (joint != null && GameMode.GetInstance().playerController.hasBall && 
             !GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton())
         {
+            if(FadeLoop.ShootTips.gameObject.activeSelf)
+            {
+                FadeLoop.ShootTips.gameObject.SetActive(false);
+            }
+
             handanimationsScript.setAnim(Animator.StringToHash("Idle"));
 
             GameObject go = joint.gameObject;
@@ -116,21 +175,42 @@ public class PickBasic : MonoBehaviour, PickInterface
             // Object.Destroy(go, 15.0f);
 
             var velArr = historyVel.ToArray();
-            Vector3 totalVel = Vector3.zero;
-            for(int i = 0; i < velArr.Length; i++)
+            Vector3 totalLinearVel = Vector3.zero;
+            //float radius = 0;
+            Vector3 totalAngularVel = Vector3.zero;
+            for (int i = 0; i < velArr.Length; i++)
             {
                 var item = velArr[i];
-                totalVel += item;
+                totalLinearVel += item.linearVel;
+                totalAngularVel += item.angularVel;
+                //radius += item.linearVel.magnitude / item.angularVel.magnitude;
             }
+            //radius /= velArr.Length;
+
+            var rightHandPos = GameMode.GetInstance().RightHand.position;
+            // raycaLayerMask.NameToLayer
 
             Vector3 toHoop = (GameMode.GetInstance().targetPos.position - attachPos.transform.position).normalized;
-            Vector3 trickDir = (totalVel).normalized;
-            trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
-            trickDir.Normalize();
-            trickDir = trickDir + Vector3.up * 0.25f;
-            trickDir.Normalize();
-            float powerScaler = Mathf.Clamp(2.5f * (totalVel / (float)velArr.Length).sqrMagnitude, 3.7f, 6.7f);
-            ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
+            Vector3 trickDir = (totalLinearVel).normalized;
+            // trickDir = new Vector3(Mathf.Lerp(trickDir.x, toHoop.x, 0.3f), Mathf.Lerp(trickDir.y, toHoop.y, 0.2f), Mathf.Lerp(trickDir.z, toHoop.z, 0.3f));
+            // trickDir.Normalize();
+            // trickDir = trickDir + Vector3.up * 0.25f;
+            // trickDir.Normalize();
+
+            //float powerScaler = 2.0f * (totalVel / (float)velArr.Length).sqrMagnitude;
+            //float powerScaler = (1 / radius) * Mathf.Pow((totalLinearVel.magnitude / velArr.Length), 2);
+
+            //Vector3 totalAngularVel = (cnt / n * totalAngularVel1 + (n - cnt) / n * totalAngualrVel2) / n;
+            totalLinearVel /= velArr.Length;
+            totalAngularVel /= velArr.Length;
+
+            // ball.AddForce(powerScaler * trickDir, ForceMode.Impulse);
+
+            //ball.AddForceAtPosition(powerScaler * trickDir, ball.transform.position - 0.5f * trickDir, ForceMode.Impulse);
+            Debug.Log("total velocity: " + totalLinearVel.magnitude);
+            Debug.Log("total angular velocity: " + totalAngularVel.magnitude);
+            ball.velocity = 4.0f * totalLinearVel;
+            ball.angularVelocity = trickDir * 2.0f * totalAngularVel.magnitude;
             ball.GetComponent<Ball>().state = Ball.State.Outside;
             ball.useGravity = true;
             GameMode.GetInstance().playerController.hasBall = false;
