@@ -199,7 +199,7 @@ public class PickBasic : MonoBehaviour, PickInterface
             //ball.AddForceAtPosition(powerScaler * trickDir, ball.transform.position - 0.5f * trickDir, ForceMode.Impulse);
             Debug.Log("total velocity: " + totalLinearVel.magnitude);
             Debug.Log("total angular velocity: " + totalAngularVel.magnitude);
-            ball.velocity = 2.0f * totalLinearVel;
+            ball.velocity = 4.0f * totalLinearVel;
             ball.angularVelocity = trickDir * 2.0f * totalAngularVel.magnitude;
             ball.GetComponent<Ball>().state = Ball.State.Outside;
             ball.useGravity = true;

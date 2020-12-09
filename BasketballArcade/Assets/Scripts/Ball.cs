@@ -29,11 +29,21 @@ public class Ball : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        // if(transform.position.y > GameMode.GetInstance().targetPos.transform.position.y && state == State.Outside)
-        // {
-        //     Vector3 toHoop = (GameMode.GetInstance().targetPos.transform.position - this.transform.position).normalized;
-        //     GetComponent<Rigidbody>().AddForce(toHoop * 1.2f, ForceMode.Force);
-        // }
+        if(Vector3.Distance(transform.position, GameMode.GetInstance().targetPos.transform.position) < 0.5f &&  transform.position.y > GameMode.GetInstance().targetPos.transform.position.y && state == State.Outside)
+        {
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.transform.position - this.transform.position).normalized;
+            GetComponent<Rigidbody>().AddForce((toHoop) * 3.0f, ForceMode.Force);
+        }
+         else if(Vector3.Distance(transform.position, GameMode.GetInstance().targetPos.transform.position) < 4.0f &&  transform.position.y > GameMode.GetInstance().targetPos.transform.position.y && state == State.Outside)
+        {
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.transform.position - this.transform.position).normalized;
+            GetComponent<Rigidbody>().AddForce(toHoop * 1.2f, ForceMode.Force);
+        }
+        else if(Vector3.Distance(transform.position, GameMode.GetInstance().targetPos.transform.position) < 8.0f &&  transform.position.y > GameMode.GetInstance().targetPos.transform.position.y && state == State.Outside)
+        {
+            Vector3 toHoop = (GameMode.GetInstance().targetPos.transform.position - this.transform.position).normalized;
+            GetComponent<Rigidbody>().AddForce(toHoop * 0.3f, ForceMode.Force);
+        }
 
         if(state == State.TheForce)
         {
