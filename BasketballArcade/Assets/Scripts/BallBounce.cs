@@ -21,8 +21,8 @@ public class BallBounce : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        bounceSound.volume = Mathf.Clamp01(col.relativeVelocity.magnitude / 10.0f);
-        //audio_source.volume = audio_source.volume * audio_source.volume;
+        bounceSound.volume = Mathf.Clamp01(col.relativeVelocity.magnitude / 8.0f);
+        //bounceSound.volume = bounceSound.volume * bounceSound.volume;
         bounceSound.Play();      
     }
 }

@@ -154,7 +154,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -440,14 +440,14 @@ Cloth:
   m_GameObject: {fileID: 290584963}
   m_Enabled: 1
   m_StretchingStiffness: 1
-  m_BendingStiffness: 0.5
+  m_BendingStiffness: 0.125
   m_UseTethers: 1
   m_UseGravity: 1
-  m_Damping: 0.1
+  m_Damping: 0.01
   m_ExternalAcceleration: {x: 0, y: 0, z: 0}
   m_RandomAcceleration: {x: 0, y: 0, z: 0}
-  m_WorldVelocityScale: 1
-  m_WorldAccelerationScale: 1
+  m_WorldVelocityScale: 0.5
+  m_WorldAccelerationScale: 0.5
   m_Friction: 0.5
   m_CollisionMassScale: 0
   m_UseContinuousCollision: 1
@@ -1114,7 +1114,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 517664e621c818d408d76add7de93e3f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d3e9be1b8554d89499d7f264a7041b2a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2010,7 +2010,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2327,7 +2327,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4953,7 +4953,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5277,7 +5277,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5885,11 +5885,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: e02a76d871e14114db21b0137b7083c4, type: 3}
+      objectReference: {fileID: 8300000, guid: f6831ca71850d664e87976b5f19e5bee, type: 3}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.17
+      value: -0.13
       objectReference: {fileID: 0}
     - target: {fileID: 7894650203487900068, guid: 1710f14a6021cae4f9e851f346f2552c,
         type: 3}
