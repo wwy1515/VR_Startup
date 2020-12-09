@@ -114,6 +114,15 @@ public class PlayerController : MonoBehaviour
             Vector2 axisVal = Vector2.zero; 
             inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out axisVal);
 
+            if(FadeLoop.MoveTips.gameObject.activeSelf)
+            {
+                if(axisVal.x > 0.05f || axisVal.y > 0.05f)
+                {
+                    FadeLoop.MoveTips.gameObject.SetActive(false);
+                    FadeLoop.StartPickTips();
+                }
+            }
+
             Vector3 forward =  Camera.main.transform.forward;
             Vector3 right =  Camera.main.transform.right;
 

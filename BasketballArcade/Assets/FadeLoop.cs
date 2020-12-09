@@ -25,41 +25,48 @@ public class FadeLoop : MonoBehaviour
         overAllTimer = 0.0f;
     }
 
-    public void StartPickTips()
+    public static void StartPickTips()
     {
-        open = true;
+        PickTips.gameObject.SetActive(true);
+    }
 
+    public static void StartMoveTips()
+    {
+        MoveTips.gameObject.SetActive(true);
+    }
+
+    public static void StartShootTips()
+    {
+        ShootTips.gameObject.SetActive(true);
+    }
+
+    public static void CloseAll()
+    {
+        MoveTips.gameObject.SetActive(false);
+        PickTips.gameObject.SetActive(false);
+        ShootTips.gameObject.SetActive(false);
     }
 
     static float timer = 0.0f;
     static float overAllTimer = 0.0f;
-    static bool open = false;
+
     // Update is called once per frame
     void Update()
     {
-        if(open)
+        overAllTimer += Time.deltaTime;
+        timer += Time.deltaTime;
+        if(timer >= 2.0)
         {
-            overAllTimer += Time.deltaTime;
-            timer += Time.deltaTime;
-            if(timer >= 2.0)
-            {
-                timer = 0.0f;
-            }
+            timer = 0.0f;
+        }
 
-            if(timer <= 1.0f)
-            {
-                canvasGroup.alpha = Mathf.Max(timer, 0.1f);
-            }
-            else
-            {
-                canvasGroup.alpha = Mathf.Max(2.0f - timer, 0.1f); 
-            }
-
-            if(overAllTimer >= 6.0f)
-            {
-                open = false;
-                ReInit();
-            }
+        if(timer <= 1.0f)
+        {
+            canvasGroup.alpha = Mathf.Max(timer, 0.1f);
+        }
+        else
+        {
+            canvasGroup.alpha = Mathf.Max(2.0f - timer, 0.1f); 
         }
     }
 }

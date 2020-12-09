@@ -113,6 +113,11 @@ public class PickBasic : MonoBehaviour, PickInterface
 
             if(noTheForce)
             {
+                if(FadeLoop.PickTips.gameObject.activeSelf)
+                {
+                    FadeLoop.PickTips.gameObject.SetActive(false);
+                    FadeLoop.StartShootTips();
+                }
                 Ball nearestBall = null;
                 float nearestDistance = 9999.9f;
 
@@ -155,6 +160,11 @@ public class PickBasic : MonoBehaviour, PickInterface
         else if (joint != null && GameMode.GetInstance().playerController.hasBall && 
             !GameMode.GetInstance().playerController.playerControllerPlatform.HandleInteractiveButton())
         {
+            if(FadeLoop.ShootTips.gameObject.activeSelf)
+            {
+                FadeLoop.ShootTips.gameObject.SetActive(false);
+            }
+
             handanimationsScript.setAnim(Animator.StringToHash("Idle"));
 
             GameObject go = joint.gameObject;
