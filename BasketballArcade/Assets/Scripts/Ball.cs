@@ -14,6 +14,8 @@ public class Ball : MonoBehaviour
 
     public State state = State.Outside;
 
+    public AudioSource scoreSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +72,7 @@ public class Ball : MonoBehaviour
                 {
                     state = State.Outside;
                     GameMode.GetInstance().scoreLogic.AddScore(1);
+                    scoreSound.Play();
                 }
                 else
                 {
